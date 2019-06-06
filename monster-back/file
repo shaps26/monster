@@ -1,0 +1,16 @@
+cp livraisons/.env livraisons/ledbyher-app.3.4.16s
+cp livraisons/.htaccess livraisons/ledbyher-app.3.4.16s/public
+rm app; ln -sf livraisons/ledbyher-app.3.4.16s app
+rm livraisons/ledbyher-app.3.4.16s/config/services_prod.yaml
+cp livraisons/services_prod.yaml livraisons/ledbyher-app.3.4.16s/config/
+cp -r livraisons/batch-scripts/ livraisons/ledbyher-app.3.4.16s/src/
+cp livraisons/legal_documents/en/legal_notice.pdf livraisons/ledbyher-app.3.4.16s/public/assets/legal_notice/en/
+cp livraisons/legal_documents/en/privacy_policy.pdf livraisons/ledbyher-app.3.4.16s/public/assets/privacy_policy/en/
+cp livraisons/legal_documents/en/terms_and_conditions.pdf livraisons/ledbyher-app.3.4.16s/public/assets/terms_and_conditions/en/
+cp livraisons/legal_documents/en/cookies_policy.pdf livraisons/ledbyher-app.3.4.16s/public/assets/cookies_policy/en/
+cp livraisons/legal_documents/fr/legal_notice.pdf livraisons/ledbyher-app.3.4.16s/public/assets/legal_notice/fr/
+cp livraisons/legal_documents/fr/privacy_policy.pdf livraisons/ledbyher-app.3.4.16s/public/assets/privacy_policy/fr/
+cp livraisons/legal_documents/fr/cookies_policy.pdf livraisons/ledbyher-app.3.4.16s/public/assets/cookies_policy/fr/
+cp livraisons/legal_documents/fr/terms_and_conditions.pdf livraisons/ledbyher-app.3.4.16s/public/assets/terms_and_conditions/fr/
+rm -r app/var/cache/*
+auth off
