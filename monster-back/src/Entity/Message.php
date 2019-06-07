@@ -23,6 +23,7 @@ class Message
 
     /**
      * @ORM\Column(type="string", length=255)
+     * message content
      */
     private $body;
 
@@ -101,6 +102,10 @@ class Message
         return $this;
     }
 
+    /**
+     * @return bool|null
+     * Is Read by the receptor
+     */
     public function getIsread(): ?bool
     {
         return $this->isread;
