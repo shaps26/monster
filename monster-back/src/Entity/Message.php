@@ -28,14 +28,14 @@ class Message
     private $body;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255)
+     *
      */
     private $expeditor;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $receptor;
 
@@ -66,12 +66,12 @@ class Message
         return $this;
     }
 
-    public function getExpeditor(): ?User
+    public function getExpeditor()
     {
         return $this->expeditor;
     }
 
-    public function setExpeditor(?User $expeditor): self
+    public function setExpeditor($expeditor): self
     {
         $this->expeditor = $expeditor;
 
