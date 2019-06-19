@@ -8,6 +8,7 @@ use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,7 +32,6 @@ class MessageController extends AbstractController
             $message = $form->getData();
             $entityManager->persist($message);
             $entityManager->flush();
-
             $form = $this->createForm(MessageType::class, new Message());
         }
 
@@ -41,5 +41,19 @@ class MessageController extends AbstractController
             'messages' => $messages,
             'form' => $form->createView()
         ]);
+    }
+    /**
+     * @Route("/messages/new", name="post_message")
+     */
+    public function postMessage(Request $request, EntityManagerInterface $entityManager)
+    {
+        $body = $request->request->get('message');
+        $expeditor = $request->request->get('expeditor');
+        $message = new Message();
+        $message->setBody($body);
+        $message->setExpeditor($expeditor);
+        $entityManager->persist($message);
+        $entityManager->flush();
+        return new Response();
     }
 }
