@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div class="mesgs">
-                    <div class="msg_history">
+                    <div id="chatbox" class="msg_history">
                         {% for message in messages %}
                             {% if message.expeditor != app.session.get('useridentifer') %}
                             <div class="incoming_msg">
@@ -111,7 +111,8 @@
                                 <div class="received_msg">
                                     <div class="received_withd_msg">
                                         <p>{{ message.body }}</p>
-                                        <span class="time_date"> {{ message.sendAt | date("F jS \\a\\t g:ia")  }}</span></div>
+                                        <span class="time_date"> {{ message.sendAt | date("F jS \\a\\t g:ia")  }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% else %}
@@ -149,6 +150,31 @@
         const eventSource = new EventSource(url);
 
         // The callback will be called every time an update is published
-        eventSource.onmessage = e => console.log(e.data); // do something with the payload
+        eventSource.onmessage = e => {
+            var event = JSON.parse(e.data);
+            var sendAt = new Date(event.sendAt.substring(0,16));
+            var send_at = sendAt.toLocaleDateString('fr');
+            var chatbox = $('#chatbox');
+            if (event.expeditor != "{{ app.session.get('useridentifer') }}")
+            {
+                var element = "<div class='incoming_msg'>" +
+                    "                                <div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>" +
+                    "                                <div class='received_msg'>" +
+                    "                                    <div class='received_withd_msg'>" +
+                    "                                        <p>"+ event.body +"</p>" +
+                    "                                        <span class='time_date'>"+send_at+"</span>" +
+                    "                                    </div>" +
+                    "                                </div>" +
+                    "                            </div>";
+            } else {
+                var element = "<div class=\"outgoing_msg\">"+
+"                                    <div class=\"sent_msg\">"+
+"                                        <p>"+event.body+"</p>"+
+"                                        <span class=\"time_date\">"+send_at+"</span> </div>"+
+"                                </div>";
+            }
+            chatbox.append(element);
+
+        }; // do something with the payload
     </script>
 {% endblock %}
