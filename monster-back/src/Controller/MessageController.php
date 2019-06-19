@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mercure\Update;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class MessageController extends AbstractController
 {
@@ -25,7 +28,6 @@ class MessageController extends AbstractController
             $session->set('useridentifer', uniqid());
         }
         $form = $this->createForm(MessageType::class, new Message());
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
@@ -45,7 +47,10 @@ class MessageController extends AbstractController
     /**
      * @Route("/messages/new", name="post_message")
      */
-    public function postMessage(Request $request, EntityManagerInterface $entityManager)
+    public function postMessage(Request $request,
+                                EntityManagerInterface $entityManager,
+                                Publisher $publisher, 
+                                SerializerInterface $serializer)
     {
         $body = $request->request->get('message');
         $expeditor = $request->request->get('expeditor');
@@ -54,6 +59,9 @@ class MessageController extends AbstractController
         $message->setExpeditor($expeditor);
         $entityManager->persist($message);
         $entityManager->flush();
+        $messageString = $serializer->serialize($message, 'json');
+        $update = new Update("homepage", $messageString);
+        $publisher($update);
         return new Response();
     }
 }
